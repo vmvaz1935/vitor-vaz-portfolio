@@ -2,7 +2,9 @@
 <html class="dark" lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta name="theme-color" content="#05070d"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Vitor Vaz — Soluções digitais para clínicas, dados e operação</title>
 <meta name="description" content="Vitor Vaz — fisioterapeuta, gestor clínico e desenvolvedor. Soluções digitais que transformam operação clínica, dados e conhecimento técnico em sistemas mais eficientes."/>
 
@@ -26,13 +28,104 @@
 }
 
 * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 body {
   font-family: 'Inter', sans-serif;
   background: #05070d;
   color: #e5e7eb;
   overflow-x: hidden;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
 }
+a, button, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+body.menu-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Safari iOS: altura útil (barra de URL) + notch */
+.min-h-hero-safari {
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+}
+
+/* Navegação: notch + Dynamic Island */
+.site-nav {
+  padding-top: max(1.25rem, env(safe-area-inset-top, 0px));
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
+/* Menu móvel (Safari / iOS) */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: #e5e7eb;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nav-toggle:focus-visible {
+  outline: 2px solid rgba(96,165,250,0.8);
+  outline-offset: 2px;
+}
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+  padding: calc(env(safe-area-inset-top, 0px) + 5.25rem) 1.5rem 2rem;
+  padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+  background: rgba(5, 7, 13, 0.94);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+.mobile-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.mobile-menu a {
+  display: block;
+  padding: 1rem 1.125rem;
+  border-radius: 12px;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+}
+.mobile-menu a:active {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.site-footer {
+  padding-bottom: max(3rem, env(safe-area-inset-bottom, 0px));
+}
+
+/* Grids: evita overflow horizontal no Safari */
+.max-w-7xl, .max-w-6xl { min-width: 0; }
+.grid { min-width: 0; }
 .font-display { font-family: 'Manrope', sans-serif; letter-spacing: -0.02em; }
 .font-mono { font-family: 'Geist Mono', monospace; }
 
@@ -120,6 +213,7 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
   padding: 1px;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(45, 212, 191, 0.2), transparent 60%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
   pointer-events: none;
 }
@@ -666,6 +760,8 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
   width: 100%; height: 100%; object-fit: cover;
   transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s;
   filter: contrast(1.05) saturate(0.9) brightness(0.78);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 .project-card:hover .project-image img {
   transform: scale(1.05);
@@ -1569,9 +1665,25 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
   width: 100%;
 }
 
-/* Responsive */
+/* Responsive — mobile / Safari */
 @media (max-width: 768px) {
   .grid-bg { background-size: 32px 32px; }
+  .projetos-ghost-num { font-size: clamp(4rem, 22vw, 9rem); }
+  .project-card { padding-top: 2.75rem; padding-bottom: 2.75rem; }
+  .project-card:first-of-type { padding-top: 0; }
+}
+@media (max-width: 380px) {
+  .btn-primary.nav-cta-compact { padding-left: 0.85rem; padding-right: 0.85rem; font-size: 0.7rem; }
+}
+.nav-cta-label-short { display: none; }
+@media (max-width: 360px) {
+  .nav-cta-label-full { display: none; }
+  .nav-cta-label-short { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .marquee-track { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
 }
 </style>
 </head>
@@ -1593,14 +1705,14 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
 <div class="ambient ambient-3"></div>
 
 <!-- Navigation -->
-<nav class="fixed top-0 left-0 right-0 z-50 px-4 pt-5 anim-fade-in">
-  <div class="max-w-6xl mx-auto">
-    <div class="glass border-glow rounded-full pl-5 pr-2 py-2 flex items-center justify-between">
-      <a href="#hero" class="flex items-center gap-2.5">
-        <div class="relative w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center" style="background: linear-gradient(135deg, #3b82f6, #2dd4bf);">
+<nav class="site-nav fixed top-0 left-0 right-0 z-50 anim-fade-in" aria-label="Principal">
+  <div class="max-w-6xl mx-auto min-w-0">
+    <div class="glass border-glow rounded-full pl-4 sm:pl-5 pr-2 py-2 flex items-center justify-between gap-2 min-w-0">
+      <a href="#hero" class="flex items-center gap-2 sm:gap-2.5 min-w-0 shrink">
+        <div class="relative w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center shrink-0" style="background: linear-gradient(135deg, #3b82f6, #2dd4bf);">
           <span class="font-display font-bold text-white text-sm">VV</span>
         </div>
-        <span class="font-display font-semibold text-white tracking-tight">Vitor Vaz</span>
+        <span class="font-display font-semibold text-white tracking-tight truncate text-sm sm:text-base">Vitor Vaz</span>
       </a>
       <div class="hidden md:flex items-center gap-7 text-sm">
         <a href="#sobre" class="text-gray-400 hover:text-white transition-colors">Sobre</a>
@@ -1608,18 +1720,30 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
         <a href="#projetos" class="text-gray-400 hover:text-white transition-colors">Projetos</a>
         <a href="#contato" class="text-gray-400 hover:text-white transition-colors">Contato</a>
       </div>
-      <a href="#contato" class="btn-primary !py-2 !px-5 !text-xs">
-        Iniciar projeto
-        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-      </a>
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <button type="button" class="nav-toggle md:hidden" id="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menu de navegação">
+          <i data-lucide="menu" class="w-5 h-5 nav-icon-menu" aria-hidden="true"></i>
+          <i data-lucide="x" class="w-5 h-5 nav-icon-close hidden" aria-hidden="true"></i>
+        </button>
+        <a href="#contato" class="btn-primary nav-cta-compact !py-2 !px-3 sm:!px-5 !text-[0.65rem] sm:!text-xs whitespace-nowrap">
+          <span class="nav-cta-label-full">Iniciar projeto</span><span class="nav-cta-label-short">Projeto</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5 shrink-0"></i>
+        </a>
+      </div>
     </div>
   </div>
 </nav>
+<div id="mobile-menu" class="mobile-menu md:hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Menu">
+  <a href="#sobre">Sobre</a>
+  <a href="#solucoes">Soluções</a>
+  <a href="#projetos">Projetos</a>
+  <a href="#contato">Contato</a>
+</div>
 
 <!-- ════════════════════════════════════════════
      HERO
      ════════════════════════════════════════════ -->
-<section id="hero" class="relative min-h-screen pt-36 md:pt-40 pb-20 overflow-hidden">
+<section id="hero" class="relative min-h-hero-safari pt-36 md:pt-40 pb-20 overflow-hidden">
   <div class="grid-bg"></div>
 
   <div class="relative max-w-7xl mx-auto px-6 lg:px-8 z-10">
@@ -2588,7 +2712,7 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
 <!-- ════════════════════════════════════════════
      FOOTER
      ════════════════════════════════════════════ -->
-<footer class="relative border-t border-white/5 py-12">
+<footer class="site-footer relative border-t border-white/5 py-12">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
     <div class="flex flex-wrap items-center justify-between gap-6">
       <div class="flex items-center gap-2.5">
@@ -2608,6 +2732,41 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
 <script>
 // Initialize Lucide icons
 lucide.createIcons();
+
+// Menu móvel (Safari / iOS): abrir, fechar e bloquear scroll
+(function () {
+  const btn = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-menu');
+  if (!btn || !panel) return;
+  const iconMenu = btn.querySelector('.nav-icon-menu');
+  const iconClose = btn.querySelector('.nav-icon-close');
+
+  function setOpen(open) {
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    panel.classList.toggle('is-open', open);
+    panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.body.classList.toggle('menu-open', open);
+    if (iconMenu) iconMenu.classList.toggle('hidden', open);
+    if (iconClose) iconClose.classList.toggle('hidden', !open);
+    btn.setAttribute('aria-label', open ? 'Fechar menu de navegação' : 'Abrir menu de navegação');
+  }
+
+  btn.addEventListener('click', function () {
+    setOpen(!panel.classList.contains('is-open'));
+  });
+
+  panel.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () { setOpen(false); });
+  });
+
+  window.addEventListener('resize', function () {
+    if (window.matchMedia('(min-width: 768px)').matches) setOpen(false);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && panel.classList.contains('is-open')) setOpen(false);
+  });
+})();
 
 // Reveal on scroll
 const io = new IntersectionObserver((entries) => {
