@@ -61,6 +61,19 @@ body.menu-open {
   padding-top: max(1.25rem, env(safe-area-inset-top, 0px));
   padding-left: max(1rem, env(safe-area-inset-left, 0px));
   padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  transition: padding 0.2s ease;
+}
+.site-nav.is-scrolled {
+  padding-top: max(0.55rem, env(safe-area-inset-top, 0px));
+}
+.site-nav-inner {
+  transition: padding 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.site-nav.is-scrolled .site-nav-inner {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  background: rgba(10, 14, 26, 0.85);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 /* Menu móvel (Safari / iOS) */
@@ -1671,6 +1684,17 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
   .projetos-ghost-num { font-size: clamp(4rem, 22vw, 9rem); }
   .project-card { padding-top: 2.75rem; padding-bottom: 2.75rem; }
   .project-card:first-of-type { padding-top: 0; }
+  .project-image {
+    border-radius: 16px;
+    box-shadow:
+      0 16px 30px -18px rgba(0,0,0,0.65),
+      0 0 24px -20px rgba(59,130,246,0.2);
+  }
+  .project-card:hover .project-image {
+    box-shadow:
+      0 18px 32px -18px rgba(0,0,0,0.68),
+      0 0 28px -18px rgba(59,130,246,0.25);
+  }
 }
 @media (max-width: 380px) {
   .btn-primary.nav-cta-compact { padding-left: 0.85rem; padding-right: 0.85rem; font-size: 0.7rem; }
@@ -1707,7 +1731,7 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
 <!-- Navigation -->
 <nav class="site-nav fixed top-0 left-0 right-0 z-50 anim-fade-in" aria-label="Principal">
   <div class="max-w-6xl mx-auto min-w-0">
-    <div class="glass border-glow rounded-full pl-4 sm:pl-5 pr-2 py-2 flex items-center justify-between gap-2 min-w-0">
+    <div class="site-nav-inner glass border-glow rounded-full pl-4 sm:pl-5 pr-2 py-2 flex items-center justify-between gap-2 min-w-0">
       <a href="#hero" class="flex items-center gap-2 sm:gap-2.5 min-w-0 shrink">
         <div class="relative w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center shrink-0" style="background: linear-gradient(135deg, #3b82f6, #2dd4bf);">
           <span class="font-display font-bold text-white text-sm">VV</span>
@@ -1763,8 +1787,8 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
         </h1>
 
         <!-- Subheadline -->
-        <div class="mt-10 space-y-5 max-w-2xl anim-fade-up delay-300">
-          <p class="text-lg md:text-xl text-gray-300/90 leading-relaxed font-light">
+        <div class="mt-7 md:mt-10 space-y-4 md:space-y-5 max-w-2xl anim-fade-up delay-300">
+          <p class="text-base md:text-xl text-gray-300/90 leading-relaxed font-light">
             <span class="text-white font-medium">Vitor Vaz</span> é fisioterapeuta, gestor clínico, pesquisador em saúde baseada em evidência e desenvolvedor de soluções digitais para clínicas, profissionais da saúde e negócios que precisam transformar operação em sistemas, dados, automações e produtos digitais.
           </p>
           <p class="text-base md:text-lg text-gray-400 leading-relaxed font-light">
@@ -1773,7 +1797,7 @@ h1, h2, h3, p { overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;
         </div>
 
         <!-- CTAs (Finex-style) -->
-        <div class="mt-12 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4 anim-fade-up delay-500">
+        <div class="mt-9 md:mt-12 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4 anim-fade-up delay-500">
           <!-- Primary: rotating conic border + animated lines + blue blur -->
           <a href="#contato" class="group inline-flex overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)] focus:outline-none sm:w-auto text-sm font-medium text-white w-full h-[54px] rounded-full pt-4 pr-8 pb-4 pl-8 relative items-center justify-center">
             <div class="absolute inset-0 -z-20 rounded-full overflow-hidden p-[1px]">
@@ -2766,6 +2790,18 @@ lucide.createIcons();
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && panel.classList.contains('is-open')) setOpen(false);
   });
+})();
+
+// Navbar compacta ao rolar (UX mobile Safari)
+(function () {
+  const nav = document.querySelector('.site-nav');
+  if (!nav) return;
+  function updateNavCompactState() {
+    nav.classList.toggle('is-scrolled', window.scrollY > 16);
+  }
+  window.addEventListener('scroll', updateNavCompactState, { passive: true });
+  window.addEventListener('resize', updateNavCompactState);
+  updateNavCompactState();
 })();
 
 // Reveal on scroll
